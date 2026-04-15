@@ -1,0 +1,376 @@
+@import './styles/global.css';
+
+/* Base styles that override bootstrap if needed */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+/* Bootstrap overrides */
+.btn:focus {
+    box-shadow: none;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Animation for new messages */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Pulse animation for online status */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(46, 204, 113, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+    }
+}
+
+.online-badge.online {
+    animation: pulse 2s infinite;
+}
+
+/* ================================================================
+   MESSAGE ACTION BUTTONS - EXTRA SMALL (7px)
+   ================================================================ */
+
+.message {
+    position: relative;
+}
+
+/* Action buttons container - extra small */
+.message-actions {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    display: flex !important;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px 4px;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.message-actions:hover {
+    transform: scale(1.05);
+}
+
+/* Individual action buttons - EXTRA SMALL (7px) */
+.message-actions svg {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 7px !important;
+    height: 7px !important;
+}
+
+.message-actions svg:hover {
+    transform: scale(1.2);
+}
+
+/* For sent messages (blue bubble) */
+.message.sent .message-actions {
+    background: rgba(13, 110, 253, 0.85);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.message.sent .message-actions svg {
+    color: #ffffff !important;
+}
+
+.message.sent .message-actions svg:hover {
+    color: #f0f0f0 !important;
+}
+
+/* For received messages (white bubble) */
+.message.received .message-actions {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e0e0e0;
+}
+
+.message.received .message-actions svg:first-child {
+    color: #0d6efd !important;
+}
+
+.message.received .message-actions svg:last-child {
+    color: #dc3545 !important;
+}
+
+.message.received .message-actions svg:hover {
+    opacity: 0.8;
+}
+
+/* ================================================================
+   DELETE OPTIONS DROPDOWN - EXTRA SMALL
+   ================================================================ */
+
+.delete-options-dropdown {
+    position: absolute;
+    top: 14px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 2px 0;
+    z-index: 1000;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    min-width: 90px;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+.delete-option {
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.delete-option:hover {
+    background-color: #f8f9fa;
+}
+
+.delete-for-me {
+    color: #495057;
+}
+
+.delete-for-everyone {
+    color: #dc3545;
+}
+
+.delete-for-everyone:hover {
+    background-color: #fff5f5;
+}
+
+/* Dropdown animation */
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================================================
+   EDIT MODE INPUT STYLES - COMPACT
+   ================================================================ */
+
+.message-bubble .d-flex {
+    gap: 4px;
+    align-items: center;
+}
+
+.message-bubble input {
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 4px 8px;
+    font-size: 11px;
+    flex: 1;
+}
+
+.message-bubble input:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
+}
+
+.message-bubble .btn-sm {
+    padding: 2px 6px;
+    border-radius: 14px;
+    font-size: 9px;
+}
+
+/* ================================================================
+   DELETED MESSAGE INDICATOR
+   ================================================================ */
+
+.message-bubble .text-muted.fst-italic {
+    font-style: italic;
+    color: #6c757d !important;
+    font-size: 10px;
+}
+
+/* ================================================================
+   DOWNLOAD LINK STYLES - Blue for received, White for sent
+   ================================================================ */
+
+.download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 10px;
+}
+
+.message.received .download-link {
+    color: #0d6efd !important;
+}
+
+.message.received .download-link:hover {
+    color: #0b5ed7 !important;
+    text-decoration: none;
+}
+
+.message.sent .download-link {
+    color: #ffffff !important;
+}
+
+.message.sent .download-link:hover {
+    color: #f0f0f0 !important;
+    text-decoration: none;
+}
+
+.download-link:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+}
+
+/* ================================================================
+   MESSAGE BUBBLE STYLES - COMPACT
+   ================================================================ */
+
+.message-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+}
+
+.message {
+    margin-bottom: 8px;
+    display: flex;
+}
+
+.message.sent {
+    justify-content: flex-end;
+}
+
+.message.received {
+    justify-content: flex-start;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 5px 10px;
+    border-radius: 14px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message.sent .message-bubble {
+    background: #0d6efd;
+    color: white;
+    border-bottom-right-radius: 3px;
+}
+
+.message.received .message-bubble {
+    background: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-bottom-left-radius: 3px;
+}
+
+.message-sender {
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 2px;
+    color: #6c757d;
+}
+
+.message-time {
+    font-size: 8px;
+    margin-top: 2px;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+
+/* White "(edited)" text for sent messages */
+.message.sent .message-time span:last-child {
+    color: #ffffff !important;
+}
+
+/* Gray "(edited)" text for received messages */
+.message.received .message-time span:last-child {
+    color: #6c757d !important;
+}
+
+/* Delete wrapper for dropdown positioning */
+.delete-wrapper {
+    position: relative;
+}
+
+/* ================================================================
+   SIDEBAR SEARCH INPUT - WHITE TEXT (ADD THIS)
+   ================================================================ */
+
+/* Search input text color - White */
+.sidebar input.form-control {
+    color: white !important;
+}
+
+/* Search input placeholder color - Light gray */
+.sidebar input.form-control::placeholder {
+    color: #95a5a6 !important;
+    opacity: 1 !important;
+}
+
+/* Search input background */
+.sidebar .input-group-text {
+    background-color: #34495e !important;
+    border: none !important;
+}
+
+/* Search icon color */
+.sidebar .input-group-text svg {
+    color: white !important;
+}
+
+/* Clear button color */
+.sidebar button svg {
+    color: white !important;
+}
