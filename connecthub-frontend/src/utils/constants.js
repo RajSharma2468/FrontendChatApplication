@@ -1,15 +1,15 @@
 // API endpoints
-export const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5046';
+export const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5046';  
 
 // Auth endpoints (explicit)
-export const AUTH_API_URL = process.env.REACT_APP_AUTH_URL || 'http://localhost:5046';
-export const MESSAGING_API_URL = process.env.REACT_APP_MESSAGING_URL || 'http://localhost:5289';
-export const ROOM_API_URL = process.env.REACT_APP_ROOM_URL || 'http://localhost:5283';
-export const MEDIA_API_URL = process.env.REACT_APP_MEDIA_URL || 'http://localhost:5047';
+export const AUTH_API_URL = 'http://localhost:5046';
+export const MESSAGING_API_URL = 'http://localhost:5289'; 
+export const ROOM_API_URL = 'http://localhost:5283';
+export const MEDIA_API_URL = 'http://localhost:5047';
 
 // SignalR endpoints
-export const SIGNALR_PRESENCE_URL = process.env.REACT_APP_SIGNALR_PRESENCE_URL || 'http://localhost:5289/presenceHub';
-export const SIGNALR_NOTIFICATION_URL = process.env.REACT_APP_SIGNALR_NOTIFICATION_URL || 'http://localhost:5289/notificationHub';
+export const SIGNALR_PRESENCE_URL = process.env.REACT_APP_SIGNALR_PRESENCE_URL || 'http://localhost:5289/presenceHub';  // Updated
+export const SIGNALR_NOTIFICATION_URL = process.env.REACT_APP_SIGNALR_NOTIFICATION_URL || 'http://localhost:5289/notificationHub';  // Updated
 
 // Local storage keys
 export const TOKEN_KEY = 'connecthub_token';

@@ -1,38 +1,15 @@
 import { authApi } from '../../utils/axiosConfig';
-import { AUTH_API_URL } from '../../utils/constants';
 
 // Register new user
 export const register = async (userData) => {
-    try {
-        const response = await authApi.post('/api/Auth/register', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Registration API Error:', error.response?.status, error.response?.data);
-        
-        // Extract the actual error message from backend
-        if (error.response?.data?.errors) {
-            // Handle validation errors
-            const errors = error.response.data.errors;
-            const errorMessage = Object.values(errors).flat().join(', ');
-            throw new Error(errorMessage);
-        } else if (error.response?.data?.message) {
-            throw new Error(error.response.data.message);
-        } else if (error.response?.data?.title) {
-            throw new Error(error.response.data.title);
-        }
-        throw error;
-    }
+    const response = await authApi.post('/api/Auth/register', userData);  // Capital 'A'
+    return response.data;
 };
 
 // Login user
 export const login = async (credentials) => {
-    try {
-        const response = await authApi.post('/api/Auth/login', credentials);
-        return response.data;
-    } catch (error) {
-        console.error('Login API Error:', error.response?.status, error.response?.data);
-        throw error;
-    }
+    const response = await authApi.post('/api/Auth/login', credentials);  // Capital 'A'
+    return response.data;
 };
 
 // Logout user
@@ -43,7 +20,7 @@ export const logout = async () => {
 
 // Get user profile
 export const getProfile = async () => {
-    const response = await authApi.get('/api/User/profile');
+    const response = await authApi.get('/api/User/profile');  // Capital 'U'
     return response.data;
 };
 
@@ -58,25 +35,25 @@ export const searchUsers = async (keyword) => {
     if (!keyword || keyword.trim().length < 2) {
         return { success: true, data: [] };
     }
-    const response = await authApi.get(`/api/User/search?q=${encodeURIComponent(keyword)}`);
+    const response = await authApi.get(`/api/User/search?q=${encodeURIComponent(keyword)}`);  // Capital 'U'
     return response.data;
 };
 
 // Get user by ID
 export const getUserById = async (userId) => {
-    const response = await authApi.get(`/api/Auth/${userId}`);
+    const response = await authApi.get(`/api/Auth/${userId}`);  // Capital 'A'
     return response.data;
 };
 
 // ================================================================
-// GOOGLE LOGIN - USE ENVIRONMENT VARIABLE
+// GOOGLE LOGIN - Redirect to backend Google OAuth
 // ================================================================
 export const googleLogin = () => {
-    window.location.href = `${AUTH_API_URL}/api/Auth/google-login`;
+    window.location.href = 'http://localhost:5046/api/Auth/google-login';  // Capital 'A'
 };
 
 // ================================================================
-// GOOGLE CALLBACK
+// GOOGLE CALLBACK - Handle Google OAuth callback
 // ================================================================
 export const handleGoogleCallback = async (token, userId, displayName, username) => {
     localStorage.setItem('connecthub_token', token);
