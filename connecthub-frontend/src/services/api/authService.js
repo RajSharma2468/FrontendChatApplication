@@ -1,16 +1,38 @@
 import { authApi } from '../../utils/axiosConfig';
-import { AUTH_API_URL } from '../../utils/constants';  // ← ADD THIS
+import { AUTH_API_URL } from '../../utils/constants';
 
 // Register new user
 export const register = async (userData) => {
-    const response = await authApi.post('/api/Auth/register', userData);
-    return response.data;
+    try {
+        const response = await authApi.post('/api/Auth/register', userData);
+        return response.data;
+    } catch (error) {
+        console.error('Registration API Error:', error.response?.status, error.response?.data);
+        
+        // Extract the actual error message from backend
+        if (error.response?.data?.errors) {
+            // Handle validation errors
+            const errors = error.response.data.errors;
+            const errorMessage = Object.values(errors).flat().join(', ');
+            throw new Error(errorMessage);
+        } else if (error.response?.data?.message) {
+            throw new Error(error.response.data.message);
+        } else if (error.response?.data?.title) {
+            throw new Error(error.response.data.title);
+        }
+        throw error;
+    }
 };
 
 // Login user
 export const login = async (credentials) => {
-    const response = await authApi.post('/api/Auth/login', credentials);
-    return response.data;
+    try {
+        const response = await authApi.post('/api/Auth/login', credentials);
+        return response.data;
+    } catch (error) {
+        console.error('Login API Error:', error.response?.status, error.response?.data);
+        throw error;
+    }
 };
 
 // Logout user
