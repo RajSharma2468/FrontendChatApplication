@@ -6,10 +6,6 @@ import signalRService from '../../services/signalr/signalrService';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
-// ================================================================
-// MESSAGE INPUT COMPONENT - Handles sending messages and files
-// ================================================================
-
 const MessageInput = () => {
     const [message, setMessage] = useState('');
     const [sending, setSending] = useState(false);
@@ -34,21 +30,13 @@ const MessageInput = () => {
         
         if (currentChat?.type === 'user') {
             signalRService.sendTypingIndicator(currentChat.id, true, 'DIRECT');
-            
-            if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current);
-            }
-            
+            if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
             typingTimeoutRef.current = setTimeout(() => {
                 signalRService.sendTypingIndicator(currentChat.id, false, 'DIRECT');
             }, 1000);
         } else if (currentChat?.type === 'room') {
             signalRService.sendTypingIndicator(currentChat.id, true, 'ROOM', currentChat.id);
-            
-            if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current);
-            }
-            
+            if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
             typingTimeoutRef.current = setTimeout(() => {
                 signalRService.sendTypingIndicator(currentChat.id, false, 'ROOM', currentChat.id);
             }, 1000);
@@ -57,7 +45,6 @@ const MessageInput = () => {
 
     const handleFileUpload = async (file, type) => {
         if (!file) return;
-        
         if (file.size > 10 * 1024 * 1024) {
             toast.error('File too large. Max 10MB');
             return;
@@ -77,9 +64,10 @@ const MessageInput = () => {
                 const senderName = user?.displayName || user?.username || `User_${user?.id}`;
                 
                 if (currentChat?.type === 'user') {
-                    // Use ONLY SignalR (it will handle real-time and database)
+                    await sendDirectMessage(currentChat.id, downloadUrl);
                     await signalRService.sendDirectMessage(currentChat.id, downloadUrl, senderName);
                 } else if (currentChat?.type === 'room') {
+                    await sendRoomMessage(currentChat.id, downloadUrl);
                     await signalRService.sendRoomMessage(currentChat.id, downloadUrl, senderName);
                 }
                 toast.success('File uploaded and sent');
@@ -92,32 +80,23 @@ const MessageInput = () => {
         }
     };
 
-    const handleImageClick = () => {
-        imageInputRef.current.click();
-    };
-
-    const handleFileClick = () => {
-        fileInputRef.current.click();
-    };
+    const handleImageClick = () => imageInputRef.current.click();
+    const handleFileClick = () => fileInputRef.current.click();
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            handleFileUpload(file, 'image');
-        }
+        if (file) handleFileUpload(file, 'image');
         e.target.value = '';
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            handleFileUpload(file, 'file');
-        }
+        if (file) handleFileUpload(file, 'file');
         e.target.value = '';
     };
 
     // ================================================================
-    // SEND MESSAGE - ONLY ONCE (SignalR only)
+    // SEND MESSAGE - Save to DB first, then SignalR broadcast
     // ================================================================
     const handleSend = async () => {
         if (!message.trim()) return;
@@ -131,11 +110,15 @@ const MessageInput = () => {
             const senderName = user?.displayName || user?.username || `User_${user?.id}`;
             
             if (currentChat.type === 'user') {
-                // ONLY SignalR - removes duplicate message issue
+                // STEP 1: Save to database
+                await sendDirectMessage(currentChat.id, message);
+                // STEP 2: Broadcast via SignalR
                 await signalRService.sendDirectMessage(currentChat.id, message, senderName);
                 setMessage('');
             } else if (currentChat.type === 'room') {
-                // ONLY SignalR - removes duplicate message issue
+                // STEP 1: Save to database
+                await sendRoomMessage(currentChat.id, message);
+                // STEP 2: Broadcast via SignalR
                 await signalRService.sendRoomMessage(currentChat.id, message, senderName);
                 setMessage('');
             }
