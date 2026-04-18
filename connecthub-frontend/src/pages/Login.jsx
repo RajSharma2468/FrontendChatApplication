@@ -4,6 +4,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginSuccess } from '../store/slices/authSlice';
 import { FaGoogle } from 'react-icons/fa';
+import { login } from '../services/api/authService';
+import { googleLogin } from '../services/api/authService';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -12,25 +14,15 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // ================================================================
-    // HANDLE NORMAL LOGIN
-    // ================================================================
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5046/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
+            const data = await login({ username, password });
             console.log('Login response:', data);
 
             if (data.success) {
-                // Create user object
                 const user = {
                     id: data.data.userId,
                     username: data.data.username,
@@ -38,13 +30,12 @@ const Login = () => {
                     email: data.data.email,
                     role: data.data.role || 'USER'
                 };
-                
-                // Dispatch Redux action (this will also save to localStorage)
+
                 dispatch(loginSuccess({
                     user: user,
                     token: data.data.token
                 }));
-                
+
                 toast.success('Login successful!');
                 navigate('/dashboard');
             } else {
@@ -52,18 +43,14 @@ const Login = () => {
             }
         } catch (error) {
             console.error('Login error:', error);
-            toast.error('Login failed. Check if backend is running.');
+            toast.error(error.response?.data?.message || 'Login failed');
         } finally {
             setLoading(false);
         }
     };
 
-    // ================================================================
-    // HANDLE GOOGLE LOGIN - Redirect to backend Google OAuth
-    // ================================================================
     const handleGoogleLogin = () => {
-        // Redirect to backend Google login endpoint
-        window.location.href = 'http://localhost:5046/api/auth/google-login';
+        googleLogin();
     };
 
     return (
@@ -74,7 +61,6 @@ const Login = () => {
                     <small>Real Time Chat</small>
                 </div>
                 <div className="card-body p-4">
-                    {/* Normal Login Form */}
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label className="form-label">Username or Email</label>
@@ -103,7 +89,6 @@ const Login = () => {
                         </button>
                     </form>
 
-                    {/* Divider */}
                     <div className="position-relative my-4">
                         <hr />
                         <span className="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">
@@ -111,8 +96,7 @@ const Login = () => {
                         </span>
                     </div>
 
-                    {/* Google Login Button */}
-                    <button 
+                    <button
                         className="btn btn-outline-danger w-100 py-2 d-flex align-items-center justify-content-center gap-2"
                         onClick={handleGoogleLogin}
                     >
