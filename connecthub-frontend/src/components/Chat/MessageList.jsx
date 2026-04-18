@@ -55,7 +55,7 @@ const MessageList = () => {
             for (const message of unreadMessages) {
                 try {
                     const token = localStorage.getItem('connecthub_token');
-                    await fetch(`http://localhost:5289/api/message/read/${message.id}`, {
+                    await fetch(`https://connecthub-gateway-g4gpfvdrgucrcgh4.centralus-01.azurewebsites.net/api/message/read/${message.id}`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -118,7 +118,7 @@ const MessageList = () => {
             
             if (fileId) {
                 const token = localStorage.getItem('connecthub_token');
-                const apiUrl = `http://localhost:5047/api/media/download/${fileId}?access_token=${token}`;
+                const apiUrl = `https://connecthub-gateway-g4gpfvdrgucrcgh4.centralus-01.azurewebsites.net/api/media/download/${fileId}?access_token=${token}`;
                 const isImage = content.match(/\.(jpeg|jpg|gif|png|webp)$/i);
                 
                 if (isImage) {
