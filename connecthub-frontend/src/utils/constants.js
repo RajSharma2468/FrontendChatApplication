@@ -1,15 +1,15 @@
-// API endpoints
-export const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5046';  
+const GATEWAY = process.env.REACT_APP_API_BASE_URL || 'https://connecthub-gateway-g4gpfvdrgucrcgh4.centralus-01.azurewebsites.net';
 
-// Auth endpoints (explicit)
-export const AUTH_API_URL = 'http://localhost:5046';
-export const MESSAGING_API_URL = 'http://localhost:5289'; 
-export const ROOM_API_URL = 'http://localhost:5283';
-export const MEDIA_API_URL = 'http://localhost:5047';
+// API endpoints - Sab Gateway se jayenge
+export const API_URL = GATEWAY;
+export const AUTH_API_URL = GATEWAY;
+export const MESSAGING_API_URL = GATEWAY;
+export const ROOM_API_URL = GATEWAY;
+export const MEDIA_API_URL = GATEWAY;
 
-// SignalR endpoints
-export const SIGNALR_PRESENCE_URL = process.env.REACT_APP_SIGNALR_PRESENCE_URL || 'http://localhost:5289/presenceHub';  // Updated
-export const SIGNALR_NOTIFICATION_URL = process.env.REACT_APP_SIGNALR_NOTIFICATION_URL || 'http://localhost:5289/notificationHub';  // Updated
+// SignalR endpoints - Direct service URLs
+export const SIGNALR_PRESENCE_URL = process.env.REACT_APP_SIGNALR_PRESENCE_URL || 'https://connecthub-presence-gtbsejaud4hcetc2.centralus-01.azurewebsites.net/presenceHub';
+export const SIGNALR_NOTIFICATION_URL = process.env.REACT_APP_SIGNALR_NOTIFICATION_URL || 'https://connecthub-notification-g8h8f3gcdhfyc6e4.centralus-01.azurewebsites.net/notificationHub';
 
 // Local storage keys
 export const TOKEN_KEY = 'connecthub_token';
