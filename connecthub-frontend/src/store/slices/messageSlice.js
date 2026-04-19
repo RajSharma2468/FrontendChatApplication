@@ -37,26 +37,30 @@ const messageSlice = createSlice({
         },
         
         // ================================================================
-        // ADD MESSAGE - FIXED: Generate numeric ID for temp messages
+        // ADD MESSAGE
+        // Only sets fallback senderName if not already provided by backend
         // ================================================================
         addMessage: (state, action) => {
             const newMessage = action.payload;
             
-            // Generate numeric ID for temp messages (fix for 400 error)
+            // Generate numeric ID for temp messages
             if (!newMessage.id || newMessage.id === 0 || typeof newMessage.id === 'string') {
-                newMessage.id = Date.now(); // Use timestamp as numeric ID
+                newMessage.id = Date.now();
             }
             
             // Check for duplicate by ID only
             const isDuplicate = state.messages.some(msg => msg.id === newMessage.id);
-            
             if (isDuplicate) {
                 console.log('Duplicate prevented:', newMessage.id);
                 return;
             }
             
-            if (!newMessage.senderName && newMessage.senderId) {
-                newMessage.senderName = `User ${newMessage.senderId}`;
+            // Only set fallback if senderName is completely missing
+            // Do NOT override if backend already sent a real name
+            if (!newMessage.senderName || newMessage.senderName.startsWith('User_')) {
+                if (newMessage.senderId) {
+                    newMessage.senderName = newMessage.senderName || `User ${newMessage.senderId}`;
+                }
             }
             
             state.messages.push(newMessage);
@@ -64,7 +68,6 @@ const messageSlice = createSlice({
         
         setCurrentChat: (state, action) => {
             state.currentChat = action.payload;
-            // Don't clear messages - let new chat load separately
         },
         
         updateMessageStatus: (state, action) => {
